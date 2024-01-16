@@ -1,0 +1,17 @@
+.kosong {
+    color: red;
+    font-size: 24px;
+    /* text-align: center; */
+}
+.document__list {
+    list-style-type: decimal;
+}
+
+.button__delete {
+    white-space: nowrap;
+}
+
+.spin {
+    width: 16px;
+    height: 16px;
+}

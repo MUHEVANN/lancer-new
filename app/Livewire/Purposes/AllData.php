@@ -250,10 +250,10 @@ class AllData extends Component
     public function import()
     {
         $this->validate([
-            'exel_file' => 'required|mimes:xlsx'
+            'exel' => 'required|mimes:xlsx'
         ], [
-            'excel_file.required' => 'masukkan File terlebih dahulu',
-            'excel_file.mimes' => 'Format File harus xlsx'
+            'excel.required' => 'masukkan File terlebih dahulu',
+            'excel.mimes' => 'Format File harus xlsx'
         ]);
         Excel::import(new PurposeImport, $this->exel);
         $this->dispatch('success-import', message: "Excel Import Successfully");

@@ -52,8 +52,9 @@ class AllData extends Component
 
     public function mount()
     {
-        $this->filterYear = (int)date('Y');
-        $this->filterMonth = (int)date('m');
+        // $this->filterYear = (int)date('Y');
+
+        // $this->filterMonth = (int)date('m');
         $this->page = 5;
         $this->penanggung_jawab = PenanggungJawab::all();
         $year = Purposes::selectRaw('YEAR(tanggal) as year')->get();
@@ -81,7 +82,7 @@ class AllData extends Component
             ->orderBy('created_at', 'desc')
             ->paginate($this->page);
 
-
+        // dd($purposes);
         return view('livewire.purposes.all-data', [
             'purposes' => $purposes,
 

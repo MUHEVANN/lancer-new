@@ -78,6 +78,7 @@ class AllData extends Component
             ->when($this->filterResponsible, function ($query) {
                 return $query->where('penanggung_jawab_id', $this->filterResponsible);
             })
+            ->orderBy('created_at', 'desc')
             ->paginate($this->page);
 
 
@@ -102,9 +103,11 @@ class AllData extends Component
         $this->validate([
             'penanggung_jawab_id' => 'required',
             'tanggal' => 'required',
+            'nama_pemohon' => 'required',
         ], [
             'penanggung_jawab_id.required' => 'Masukkan nama penanggung jawab terlebih dahulu!',
-            'tanggal.required' => 'Berapa Tanggal Masuk?'
+            'tanggal.required' => 'Berapa Tanggal Masuk?',
+            'nama_pemohon.required' => 'Nama pemohon?',
         ]);
 
 
@@ -162,6 +165,15 @@ class AllData extends Component
 
     public function update()
     {
+        $this->validate([
+            'penanggung_jawab_id' => 'required',
+            'tanggal' => 'required',
+            'nama_pemohon' => 'required',
+        ], [
+            'penanggung_jawab_id.required' => 'Masukkan nama penanggung jawab terlebih dahulu!',
+            'tanggal.required' => 'Berapa Tanggal Masuk?',
+            'nama_pemohon.required' => 'Nama pemohon?',
+        ]);
         $purposes = Purposes::find($this->purposes_id);
         $purposes->id = $this->purposes_id;
         $purposes->penanggung_jawab_id = $this->penanggung_jawab_id;
@@ -237,8 +249,16 @@ class AllData extends Component
     }
     public function import()
     {
-        return Excel::import(new PurposeImport, $this->exel);
-        $this->dispatch('success-import');
+        $this->validate([
+            'exel_file' => 'required|mimes:xlsx'
+        ], [
+            'excel_file.required' => 'masukkan File terlebih dahulu',
+            'excel_file.mimes' => 'Format File harus xlsx'
+        ]);
+        Excel::import(new PurposeImport, $this->exel);
+        $this->dispatch('success-import', message: "Excel Import Successfully");
+        $this->exel = null;
+        $this->iteration++;
     }
 
     public function resetFilter()

@@ -111,10 +111,17 @@
                             <label for="" class="">Nama Bank</label>
                             <input type="text" wire:model.live="bank_name" id="bank_name" class="form-control">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" x-data="{ uploading: false, progress: 0 }" x-on:livewire-upload-start="uploading = true"
+                            x-on:livewire-upload-finish="uploading = false"
+                            x-on:livewire-upload-error="uploading = false"
+                            x-on:livewire-upload-progress="progress = $event.detail.progress" wire:ignore.self>
+
                             <label for="" class="">Document</label>
                             <input type="file" wire:model.live="document" id="document" class="form-control"
                                 multiple>
+                            <div x-show="uploading" class="progres">
+                                <progress max="100" x-bind:value="progress"></progress>
+                            </div>
                             <div id="error-document" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
@@ -141,7 +148,18 @@
                             wire:click="close">
                             Close
                         </button>
-                        <button class="btn btn-primary">Save</button>
+                        <div>
+                            <button class="btn btn-primary" id="button_import" wire:target="document"
+                                wire:loading.class="d-none">
+                                Save
+                            </button>
+                            <button wire:loading wire:target="document" class="btn btn-primary " disabled>
+                                <div class="spinner-border text-light spin" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
+                        {{-- <button class="btn btn-primary">Save</button> --}}
                     </div>
                 </form>
             </div>
@@ -191,10 +209,17 @@
                             <label for="" class="">Nama Bank</label>
                             <input type="text" wire:model.live="bank_name" id="bank_name" class="form-control">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" x-data="{ uploading: false, progress: 0 }" x-on:livewire-upload-start="uploading = true"
+                            x-on:livewire-upload-finish="uploading = false"
+                            x-on:livewire-upload-error="uploading = false"
+                            x-on:livewire-upload-progress="progress = $event.detail.progress" wire:ignore.self>
+
                             <label for="" class="">Document</label>
                             <input type="file" wire:model.live="document" id="document" class="form-control"
                                 multiple>
+                            <div x-show="uploading">
+                                <progress max="100" x-bind:value="progress"></progress>
+                            </div>
                             <div id="error-document" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
@@ -221,7 +246,17 @@
                             wire:click="close">
                             Close
                         </button>
-                        <button class="btn btn-primary">Save</button>
+                        <div>
+                            <button class="btn btn-primary" id="button_import" wire:target="document"
+                                wire:loading.class="d-none">
+                                Save
+                            </button>
+                            <button wire:loading wire:target="document" class="btn btn-primary " disabled>
+                                <div class="spinner-border text-light spin" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -277,7 +312,7 @@
                                     <ul>
                                         @foreach ($item->document as $doc)
                                             <li class="document__list">
-                                                <a href="{{ asset('document/' . $doc->document) }}"
+                                                <a href="{{ asset('storage/document/' . $doc->document) }}"
                                                     target="_blank">{{ $doc->document }}</a>
                                             </li>
                                         @endforeach

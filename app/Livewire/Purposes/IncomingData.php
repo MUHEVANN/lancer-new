@@ -78,6 +78,7 @@ class IncomingData extends Component
             ->when($this->filterResponsible, function ($query) {
                 return $query->where('penanggung_jawab_id', $this->filterResponsible);
             })
+            ->orderBy('created_at', 'desc')
             ->paginate($this->page);
 
 
@@ -102,9 +103,11 @@ class IncomingData extends Component
         $this->validate([
             'penanggung_jawab_id' => 'required',
             'tanggal' => 'required',
+            'nama_pemohon' => 'required',
         ], [
             'penanggung_jawab_id.required' => 'Masukkan nama penanggung jawab terlebih dahulu!',
-            'tanggal.required' => 'Berapa Tanggal Masuk?'
+            'tanggal.required' => 'Berapa Tanggal Masuk?',
+            'nama_pemohon.required' => 'Nama pemohon?',
         ]);
 
 
@@ -163,6 +166,15 @@ class IncomingData extends Component
 
     public function update()
     {
+        $this->validate([
+            'penanggung_jawab_id' => 'required',
+            'tanggal' => 'required',
+            'nama_pemohon' => 'required',
+        ], [
+            'penanggung_jawab_id.required' => 'Masukkan nama penanggung jawab terlebih dahulu!',
+            'tanggal.required' => 'Berapa Tanggal Masuk?',
+            'nama_pemohon.required' => 'Nama pemohon?',
+        ]);
         $purposes = Purposes::find($this->purposes_id);
         $purposes->id = $this->purposes_id;
         $purposes->penanggung_jawab_id = $this->penanggung_jawab_id;

@@ -23,7 +23,7 @@
                 <div class="d-flex  tes gap-2 justify-content-end">
                     <form action="" enctype="multipart/form-data" class="d-flex gap-2" wire:submit="import">
                         <input type="file" class="form-control" wire:model.live="exel"
-                            id="exel_file{{ $iteration }}">
+                            id="exel_file{{ $iteration }}" accept=".xlsx">
                         @error('exel')
                             <small class="d-block text-danger">{{ $message }}</small>
                         @enderror
@@ -144,10 +144,17 @@
                             <label for="" class="">Nama Bank</label>
                             <input type="text" wire:model.live="bank_name" id="bank_name" class="form-control">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" x-data="{ uploading: false, progress: 0 }" x-on:livewire-upload-start="uploading = true"
+                            x-on:livewire-upload-finish="uploading = false"
+                            x-on:livewire-upload-error="uploading = false"
+                            x-on:livewire-upload-progress="progress = $event.detail.progress" wire:ignore.self>
+
                             <label for="" class="">Document</label>
                             <input type="file" wire:model.live="document" id="document" class="form-control"
                                 multiple>
+                            <div x-show="uploading">
+                                <progress max="100" x-bind:value="progress"></progress>
+                            </div>
                             <div id="error-document" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
@@ -174,7 +181,17 @@
                             wire:click="close">
                             Close
                         </button>
-                        <button class="btn btn-primary">Save</button>
+                        <div>
+                            <button class="btn btn-primary" id="button_import" wire:target="document"
+                                wire:loading.class="d-none">
+                                Save
+                            </button>
+                            <button wire:loading wire:target="document" class="btn btn-primary " disabled>
+                                <div class="spinner-border text-light spin" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -224,10 +241,17 @@
                             <label for="" class="">Nama Bank</label>
                             <input type="text" wire:model.live="bank_name" id="bank_name" class="form-control">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" x-data="{ uploading: false, progress: 0 }" x-on:livewire-upload-start="uploading = true"
+                            x-on:livewire-upload-finish="uploading = false"
+                            x-on:livewire-upload-error="uploading = false"
+                            x-on:livewire-upload-progress="progress = $event.detail.progress" wire:ignore.self>
+
                             <label for="" class="">Document</label>
                             <input type="file" wire:model.live="document" id="document" class="form-control"
                                 multiple>
+                            <div x-show="uploading">
+                                <progress max="100" x-bind:value="progress"></progress>
+                            </div>
                             <div id="error-document" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
@@ -509,6 +533,25 @@
                     icon: "success",
                     title: data.message
                 });
+            })
+            Livewire.on('success-import', (data) => {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    padding: "12px",
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: data.message
+                });
+                $('#button_import').prop('disabled', true);
             })
             Livewire.on('success-outgoing-data', (data) => {
                 const Toast = Swal.mixin({

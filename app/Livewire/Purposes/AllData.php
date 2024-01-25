@@ -79,7 +79,7 @@ class AllData extends Component
             ->when($this->filterResponsible, function ($query) {
                 return $query->where('penanggung_jawab_id', $this->filterResponsible);
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy('tanggal', 'desc')
             ->paginate($this->page);
 
         // dd($purposes);

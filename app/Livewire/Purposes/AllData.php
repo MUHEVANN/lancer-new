@@ -52,9 +52,6 @@ class AllData extends Component
 
     public function mount()
     {
-        // $this->filterYear = (int)date('Y');
-
-        // $this->filterMonth = (int)date('m');
         $this->page = 5;
         $this->penanggung_jawab = PenanggungJawab::all();
         $year = Purposes::selectRaw('YEAR(tanggal) as year')->get();
@@ -81,9 +78,9 @@ class AllData extends Component
                 return $query->where('penanggung_jawab_id', $this->filterResponsible);
             })
             ->orderBy('tanggal', 'desc')
-            ->paginate($this->page);
+            ->paginate($this->page, pageName: '/all-data');
         if ($this->search !== "") {
-            $this->resetPage();
+            $this->resetPage(pageName: '/all-data');
         }
         // dd($purposes);
         return view('livewire.purposes.all-data', [

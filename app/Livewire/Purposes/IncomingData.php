@@ -52,8 +52,6 @@ class IncomingData extends Component
 
     public function mount()
     {
-        $this->filterYear = (int)date('Y');
-        $this->filterMonth = (int)date('m');
         $this->page = 5;
         $this->penanggung_jawab = PenanggungJawab::all();
         $year = Purposes::selectRaw('YEAR(tanggal) as year')->get();
@@ -67,8 +65,9 @@ class IncomingData extends Component
     public function render()
     {
 
-        $purposes = Purposes::with('document', 'responsible')->where('proses_sertifikat', 'masuk')
+        $purposes = Purposes::with('document', 'responsible')
             ->where('nama_pemohon', 'LIKE', "%" . $this->search . "%")
+            ->where('proses_sertifikat', 'masuk')
             ->when($this->filterMonth, function ($query) {
                 return $query->whereMonth('tanggal', $this->filterMonth);
             })
@@ -78,9 +77,11 @@ class IncomingData extends Component
             ->when($this->filterResponsible, function ($query) {
                 return $query->where('penanggung_jawab_id', $this->filterResponsible);
             })
-            ->orderBy('created_at', 'desc')
-            ->paginate($this->page);
-
+            ->orderBy('tanggal', 'desc')
+            ->paginate($this->page, pageName: '/incoming-data');
+        if ($this->search !== "") {
+            $this->resetPage(pageName: '/incoming-data');
+        }
 
         return view('livewire.purposes.incoming-data', [
             'purposes' => $purposes,

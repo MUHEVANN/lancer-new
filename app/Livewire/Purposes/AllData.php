@@ -68,6 +68,7 @@ class AllData extends Component
     public function render()
     {
 
+
         $purposes = Purposes::with('document', 'responsible')
             ->where('nama_pemohon', 'LIKE', "%" . $this->search . "%")
             ->when($this->filterMonth, function ($query) {
@@ -81,7 +82,9 @@ class AllData extends Component
             })
             ->orderBy('tanggal', 'desc')
             ->paginate($this->page);
-
+        if ($this->search !== "") {
+            $this->resetPage();
+        }
         // dd($purposes);
         return view('livewire.purposes.all-data', [
             'purposes' => $purposes,

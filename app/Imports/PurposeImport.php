@@ -16,6 +16,7 @@ class PurposeImport implements ToCollection, WithHeadingRow
      */
     public function collection(Collection $collection)
     {
+        // dd($collection);
         foreach ($collection as $row) {
             $responsible = PenanggungJawab::where('nama_penanggung_jawab', $row['penanggung_jawab'])->first();
             if (is_null($responsible)) {
@@ -25,7 +26,7 @@ class PurposeImport implements ToCollection, WithHeadingRow
             }
             // dd($row);
             Purposes::create([
-                'tanggal' => Carbon::createFromDate('1900', '01', '01')->addDays($row['tanggal_dibuat'] - 2)->format('Y-m-d'),
+                'tanggal' => Carbon::createFromDate('1900', '01', '01')->addDays((int)$row['tanggal_dibuat'] - 2)->format('Y-m-d'),
                 'jenis_pekerjaan' => $row['jenis_pekerjaan'],
                 'no_akta' => $row['nomor_akta'],
                 'proses_permohonan' => $row['proses_permohonan'],
